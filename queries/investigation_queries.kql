@@ -1,0 +1,15 @@
+// Identify top attacking IPs targeting linux-target-1
+DeviceLogonEvents
+| where TimeGenerated >= ago(5h)
+| where DeviceName startswith "linux-target-1"
+| where ActionType == "LogonFailed"
+| where isnotempty(RemoteIP)
+| summarize Failures = count() by RemoteIP
+| order by Failures desc
+
+// Check for successful logons from top 3 IPs
+DeviceLogonEvents
+| where TimeGenerated >= ago(5h)
+| where DeviceName startswith "linux-target-1"
+| where RemoteIP in ("159.89.184.37","178.128.32.234","142.93.147.32")
+| summarize Count = count() by RemoteIP, ActionType
