@@ -1,0 +1,6 @@
+DeviceLogonEvents
+| where TimeGenerated >= ago(5h)
+| where ActionType == "LogonFailed"
+| summarize NumberOfFailures = count() by RemoteIP, DeviceName
+| where NumberOfFailures >= 10
+| order by NumberOfFailures desc
